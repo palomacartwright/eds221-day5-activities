@@ -1,0 +1,37 @@
+---
+title: "Runoff Volumes"
+author: "Paloma Cartwright"
+date: "13/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+
+source(here::here("src", "storm_runoff.R"))
+```
+
+
+```{r}
+
+impervious_range <- seq(from = 0.6, to = 0.8, by = 0.01)
+watershed_area <- 182
+stormwater_volume <- predict_runoff(impervious_range, watershed_area)
+runoff_df <- data.frame(impervious = impervious_range, 
+                        volume = stormwater_volume)
+
+ggplot(data = runoff_df, aes(x = impervious, y = volume)) +
+  geom_point() + 
+  geom_line(aes(color = impervious)) +
+  labs(title = "Watershed Runoff Volume as the Impervious Fraction Changes",
+       x = "Impervious Fraction", 
+       y = "Watershed Runoff Volume", 
+       color = "Impervious Range")
+
+ggsave(here::here("figs", "runoff_volumes.png"))
+
+```
+
+

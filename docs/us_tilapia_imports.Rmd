@@ -1,0 +1,41 @@
+---
+title: "Tilapia Imports"
+author: "Paloma Cartwright"
+date: "13/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+```{r}
+
+us_tilapia_imports <- read_csv(here::here("data", "us_tilapia_imports.csv")) 
+
+tilapia <-  pivot_longer(data = us_tilapia_imports, 
+                         cols = -country, 
+                         names_to = "year", 
+                         values_to = "imports")
+tilapia$year <- as.numeric(tilapia$year)
+
+
+yearly_tilapia_tot <- tilapia %>% 
+  dplyr::group_by(year) %>% 
+  summarize(total = sum(imports, na.rm = TRUE))
+
+
+ggplot(data = yearly_tilapia_tot, aes(x = year, y = total)) +
+  geom_line() +
+  labs(title = "US Tilapia Imports by Year", 
+       x = "Year",
+       y = "Total Imports (thousands of pounds)")
+
+ggsave(here::here("figs", "yearly_total_imports.png"))
+  
+
+```
+
