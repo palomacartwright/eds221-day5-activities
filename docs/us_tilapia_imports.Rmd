@@ -39,3 +39,24 @@ ggsave(here::here("figs", "yearly_total_imports.png"))
 
 ```
 
+```{r}
+
+
+latin_america_imports <- tilapia %>% 
+  filter(country %in% c("Ecuador", "Honduras", "Costa Rica", "Mexico")) 
+
+l_a_imports_subset <- latin_america_imports %>% 
+  group_by(country, year) %>% 
+  summarize(total = sum(imports, na.rm = TRUE))
+
+ggplot(l_a_imports_subset, aes(x = year, y = total)) +
+  geom_point(aes(color = country)) +
+  geom_line(aes(color = country)) + 
+  labs(title = "US Tilapia Imports from Latin American Countries", 
+       x = "Year", 
+       y = "Total Imports (Thousands of Pounds)", 
+       color = "Country")
+
+ggsave(here::here("figs", "latin_america_imports.jpg"))
+```
+
